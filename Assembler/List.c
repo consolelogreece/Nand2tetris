@@ -19,6 +19,7 @@ int AddItem(List* list, char* label, int isStringLiteral)
 {
     Node *node = malloc(sizeof(Node));
     if (!node) return -1;
+
     node->label = label;
     node->next = NULL;
     node->isStringLiteral = isStringLiteral;
@@ -76,8 +77,6 @@ List* NewList()
 void FreeList(List* list)
 {
     Node* node = list->Head;
-
-    int i = 0;
 
     while (node != NULL) {
         Node* oldNode = node;

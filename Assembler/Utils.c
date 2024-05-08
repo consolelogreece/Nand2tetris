@@ -2,28 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h> 
-
-char* IntToBinary(unsigned int n)
-{
-    // hack is 16 bit, + 1 for '\0' at end.
-    char *buffer = malloc(sizeof(char) * 17);
-    if (!buffer) return NULL;
-    buffer[16] = '\0';
-
-    int c, result;
-
-    for (c = 15; c >= 0; c--)
-    {
-        result = n >> c;
-
-        if (result & 1)
-            buffer[c] = '1';
-        else
-            buffer[c] = '0';
-    }
-
-    return buffer;
-}
+#include "Utils.h"
 
 char* PadLeft(char* s, char p, int len)
 {

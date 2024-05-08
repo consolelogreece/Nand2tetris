@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "HashMap.h"
 
 HashMap* NewHashMap()
@@ -62,7 +63,6 @@ char* GetValue(HashMap* map, char* key)
 		return NULL;
 	}
 }
-
 
 void FreeHashMap(HashMap* map)
 {
