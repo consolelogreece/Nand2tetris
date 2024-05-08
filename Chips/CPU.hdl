@@ -1,0 +1,131 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/5/CPU.hdl
+/**
+ * The Hack Central Processing unit (CPU).
+ * Parses the binary code in the instruction input and executes it according to the
+ * Hack machine language specification. In the case of a C-instruction, computes the
+ * function specified by the instruction. If the instruction specifies to read a memory
+ * value, the inM input is expected to contain this value. If the instruction specifies
+ * to write a value to the memory, sets the outM output to this value, sets the addressM
+ * output to the target address, and asserts the writeM output (when writeM = 0, any
+ * value may appear in outM).
+ * If the reset input is 0, computes the address of the next instruction and sets the
+ * pc output to that value. If the reset input is 1, sets pc to 0.
+ * Note: The outM and writeM outputs are combinational: they are affected by the
+ * instruction's execution during the current cycle. The addressM and pc outputs are
+ * clocked: although they are affected by the instruction's execution, they commit to
+ * their new values only in the next cycle.
+ */
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+	// Note: Refer to the Hack machine language specification as evidence for the reasoning throughout the comments.
+	// Instruction mux 1: Should set register A to the ALU output when C instruction (i.e. when left most bit = 0) and destination is A.
+	And(a=instruction[15], b=instruction[5], out=mux1sel);
+	Mux16(a=instruction, b=ALUout, sel=mux1sel,out=mux1out); 
+
+	// A register: Load in register A should only occur during A instructions, or if a C instruction and destination is A.
+	And(a=instruction[15], b=instruction[5], out=CstoreA);
+	Not(in=instruction[15], out=isAInstruction);
+	Or(a=isAInstruction, b=CstoreA, out=storeA);
+	ARegister(in=mux1out, load=storeA, out=aregout, out[0..14]=addressM);
+	
+	// D register: Only load during C instructions when D is the destination (i.e. when 5th least significant bit is 1).
+	And(a=instruction[15], b=instruction[4], out=dload);
+	DRegister(in=ALUout, load=dload, out=dregout);
+
+	// instruction mux 2: The first bit of the comp section determines whether to operate on A or M.
+	Mux16(a=aregout, b=inM, sel=instruction[12], out=mux2out);
+
+	// PROGRAM COUNTER //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Not-ed all the jump bits here for convenience.
+	Not(in=instruction[2], out=notj1);
+	Not(in=instruction[1], out=notj2);
+	Not(in=instruction[0], out=notj3);	
+
+	// Each of the following parts are the various combinations for determining whether to jump. If a jump is true, then the load bit for the PC is set to 1, 
+	// as this is what jumping is... In summary, if the jump bits are not 000, it is a C instruction, it is not 000, and either the jump bits are 111 or one 
+	// of the following combinations is true, then a jump is being executed. The 3 bits in each comment for this part are the jump bits...
+
+	// Combination for JGT (001 and out > 0): 001 and and(not(zr), not(ng)).
+	// note, this works because j3 has to be 1, if j3 is also 0 then it'll be 000 and there is an explicit check for that later. Similar is true for later combinations.
+	Not(in=ng, out=notng);
+	Not(in=zr, out=notzr);
+	And(a=notzr, b=notng, out=greaterthan0);
+	And(a=notj1, b=notj2, out=isJGTJumpType); 
+	And(a=greaterthan0, b=isJGTJumpType, out = JGTload);
+
+	// Combination for JEQ (010 and out = 0): 010 and zr
+	And(a=notj1, b=notj3, out=isJEQJumpType);
+	And(a=isJEQJumpType, b=zr, out=JEQload);
+
+	// Combination for JGE (011 and out >= 0): 011 and or(zr, not(ng)).
+	// Note: If jump bit 1 (instruction[2]) is 1, then it's 111 which is an unconditional jump anyway. Similar is true for later combinations.
+	And(a=instruction[1], b=instruction[0], out=isJGEJumpType); 
+	Or(a=greaterthan0, b=zr, out=ValidJGEJump);
+	And(a=isJGEJumpType, b=ValidJGEJump, out=JGEload);
+	
+	// Combination for JLT (100 and out < 0): 100 and ng.
+	And(a=notj2, b=notj3, out=isJLTJumpType);
+	And(a=isJLTJumpType, b=ng, out=JLTload);
+	
+	// Combination for JNE (101 and out != 0): 101 and not(zr)
+	And(a=instruction[2], b=instruction[0], out=isJNEJumpType);	
+	And(a=isJNEJumpType, b=notzr, out=JNEload);
+	
+	// Combination for JLE (110 and out <= 0): 110 and or(zr, ng)
+	And(a=instruction[2], b=instruction[1], out=isJLEJumpType);
+	Or(a=zr, b=ng, out=lessthanequalto0);
+	And(a=isJLEJumpType, b=lessthanequalto0, out=JLEload);
+
+	// Determine whether to jump by checking:
+	// - Jump bits are not 000.
+	// - It is a C instruction.
+	// - Either one of the above combinations are true, or the jump bits are 111 (unconditional jump).
+
+	// Are one of the above combinations true, or are the jump bits 111?
+	And(a=instruction[2], b=instruction[1], out=is11);
+	And(a=is11, b=instruction[0], out=is111);
+	Or8Way(in[0]=JGTload, in[1]=JEQload, in[2]=JGEload, in[3]=JLTload, in[4]=JNEload, in[5]=JLEload, in[6]=is111, in[7]=false, out=shouldLoad);
+
+	// Are the jump bits not 000 and is it a C instruction?
+	And(a=notj1, b=notj2, out=is00);
+	And(a=is00, b=notj3, out=is000);
+	Not(in=is000, out=not000);
+
+	// If the bits consitute a valid jump, and it is a C instruction, do the jump (i.e. set the PC load bit to 1), otherwise don't (set load bit to 0).
+	And(a=shouldLoad, b=not000, out=performJump);
+	And(a=performJump, b=instruction[15], out=pcload);
+	
+	// Increment is only true if we are neither loading or resetting the PC.
+	Not(in=pcload, out=notpcload);
+	Not(in=reset, out=notreset);
+	And(a=notpcload, b=notreset, out=pcinc);
+	PC(in=aregout, inc=pcinc, load=pcload, reset=reset, out[0..14]=pc);
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// ALU: The control bits are the last 6 bits of the computation section of a C instruction.
+	ALU(x=dregout, y=mux2out, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ALUout, out=outM, zr=zr, ng=ng);
+
+	// Set memory write bit: Writing should only occur if C instruction and destination = M.
+	And(a=instruction[15], b=instruction[3], out=writeM);
+}
+
+
+
+
+
+
