@@ -29,7 +29,8 @@
 CHIP ALU {
     IN  
         x[16], y[16],  // 16-bit inputs        
-        zx, // zero the x input? 
+        zx, // zero the x input?
+        nx, // negate the x input? 
         zy, // zero the y input?
         ny, // negate the y input?
         f,  // compute (out = x + y) or (out = x & y)?
@@ -62,5 +63,6 @@ CHIP ALU {
 	// Calculate zr by determining if there are any 1 bits (all 0 bits = must be 0), and output ZR.
 	Or8Way(in=outFirstHalf, out=firstHalfOr8Way);
 	Or8Way(in=outSecondHalf, out=secondHalfOr8Way);
-	Nand(a=firstHalfOr8Way, b=secondHalfOr8Way, out=nr);	 
+	Or(a=firstHalfOr8Way, b=secondHalfOr8Way, out=any1s);	
+	Not(in=any1s, out=zr);
 }
