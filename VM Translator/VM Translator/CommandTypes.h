@@ -1,0 +1,2 @@
+#pragma once
+enum CommandTypes {UNKNOWN, ARITHMETIC, PUSH, POP, LABEL, GOTO, IF, FUNCTION, RETURN, CALL};
