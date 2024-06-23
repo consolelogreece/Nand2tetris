@@ -4,7 +4,6 @@ D=A
 @SP
 M=D
 
-
 // Call SYS.INIT 0
 @SYS.INIT$ret.0
 D=A
@@ -56,13 +55,10 @@ M=D
 (SYS.INIT$ret.0)
 
 
-
-
 // Function SYS.INIT 0
 (SYS.INIT)
 @0
 D=A
-
 
 // Push CONSTANT 4000
 @4000
@@ -73,7 +69,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 0
 @SP
 M=M-1
@@ -81,7 +76,6 @@ A=M
 D=M
 @3
 M=D
-
 
 // Push CONSTANT 5000
 @5000
@@ -92,7 +86,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 1
 @SP
 M=M-1
@@ -100,7 +93,6 @@ A=M
 D=M
 @4
 M=D
-
 
 // Call SYS.MAIN 0
 @SYS.MAIN$ret.1
@@ -152,7 +144,6 @@ M=D
 0;JMP
 (SYS.MAIN$ret.1)
 
-
 // Pop TEMP 1
 @SP
 M=M-1
@@ -161,15 +152,12 @@ D=M
 @6
 M=D
 
-
 // Label LOOP
 (SYS.INIT$LOOP)
-
 
 // Goto LOOP
 @SYS.INIT$LOOP
 0;JMP
-
 
 // Function SYS.MAIN 5
 (SYS.MAIN)
@@ -201,7 +189,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 4001
 @4001
 D=A
@@ -211,7 +198,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 0
 @SP
 M=M-1
@@ -219,7 +205,6 @@ A=M
 D=M
 @3
 M=D
-
 
 // Push CONSTANT 5001
 @5001
@@ -230,7 +215,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 1
 @SP
 M=M-1
@@ -238,7 +222,6 @@ A=M
 D=M
 @4
 M=D
-
 
 // Push CONSTANT 200
 @200
@@ -248,7 +231,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop LOCAL 1
 @SP
@@ -269,7 +251,6 @@ D=M
 A=M
 M=D
 
-
 // Push CONSTANT 40
 @40
 D=A
@@ -278,7 +259,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop LOCAL 2
 @SP
@@ -299,7 +279,6 @@ D=M
 A=M
 M=D
 
-
 // Push CONSTANT 6
 @6
 D=A
@@ -308,7 +287,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop LOCAL 3
 @SP
@@ -329,7 +307,6 @@ D=M
 A=M
 M=D
 
-
 // Push CONSTANT 123
 @123
 D=A
@@ -338,7 +315,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call SYS.ADD12 1
 @SYS.ADD12$ret.2
@@ -390,7 +366,6 @@ M=D
 0;JMP
 (SYS.ADD12$ret.2)
 
-
 // Pop TEMP 0
 @SP
 M=M-1
@@ -398,7 +373,6 @@ A=M
 D=M
 @5
 M=D
-
 
 // Push LOCAL 0
 @LCL
@@ -413,7 +387,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push LOCAL 1
 @LCL
 D=M
@@ -426,7 +399,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Push LOCAL 2
 @LCL
@@ -441,7 +413,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push LOCAL 3
 @LCL
 D=M
@@ -454,7 +425,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Push LOCAL 4
 @LCL
@@ -469,6 +439,24 @@ M=D
 @SP
 M=M+1
 
+// ADD
+@SP
+M=M-1
+A=M
+D=M
+@R13
+M=D
+@SP
+M=M-1
+A=M
+D=M
+@R13
+D=M+D
+@SP
+A=M
+M=D
+@SP
+M=M+1
 
 // ADD
 @SP
@@ -489,7 +477,6 @@ M=D
 @SP
 M=M+1
 
-
 // ADD
 @SP
 M=M-1
@@ -509,7 +496,6 @@ M=D
 @SP
 M=M+1
 
-
 // ADD
 @SP
 M=M-1
@@ -528,27 +514,6 @@ A=M
 M=D
 @SP
 M=M+1
-
-
-// ADD
-@SP
-M=M-1
-A=M
-D=M
-@R13
-M=D
-@SP
-M=M-1
-A=M
-D=M
-@R13
-D=M+D
-@SP
-A=M
-M=D
-@SP
-M=M+1
-
 
 // Return
 @LCL
@@ -603,12 +568,10 @@ M=D
 A=M
 0;JMP
 
-
 // Function SYS.ADD12 0
 (SYS.ADD12)
 @0
 D=A
-
 
 // Push CONSTANT 4002
 @4002
@@ -619,7 +582,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 0
 @SP
 M=M-1
@@ -627,7 +589,6 @@ A=M
 D=M
 @3
 M=D
-
 
 // Push CONSTANT 5002
 @5002
@@ -638,7 +599,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 1
 @SP
 M=M-1
@@ -646,7 +606,6 @@ A=M
 D=M
 @4
 M=D
-
 
 // Push ARGUMENT 0
 @ARG
@@ -661,7 +620,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 12
 @12
 D=A
@@ -670,7 +628,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // ADD
 @SP
@@ -690,7 +647,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -744,5 +700,3 @@ M=D
 @retAddr
 A=M
 0;JMP
-
-

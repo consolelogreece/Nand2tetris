@@ -7,7 +7,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop LOCAL 0
 @SP
 M=M-1
@@ -27,10 +26,8 @@ D=M
 A=M
 M=D
 
-
 // Label LOOP
 (NULL$LOOP)
-
 
 // Push ARGUMENT 0
 @ARG
@@ -45,7 +42,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push LOCAL 0
 @LCL
 D=M
@@ -58,7 +54,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // ADD
 @SP
@@ -79,7 +74,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop LOCAL 0
 @SP
 M=M-1
@@ -99,7 +93,6 @@ D=M
 A=M
 M=D
 
-
 // Push ARGUMENT 0
 @ARG
 D=M
@@ -113,7 +106,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 1
 @1
 D=A
@@ -122,7 +114,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -143,7 +134,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop ARGUMENT 0
 @SP
 M=M-1
@@ -163,7 +153,6 @@ D=M
 A=M
 M=D
 
-
 // Push ARGUMENT 0
 @ARG
 D=M
@@ -177,7 +166,6 @@ M=D
 @SP
 M=M+1
 
-
 // If-goto LOOP
 @SP
 M=M-1
@@ -185,7 +173,6 @@ A=M
 D=M
 @NULL$LOOP
 D;JNE
-
 
 // Push LOCAL 0
 @LCL
@@ -199,5 +186,3 @@ A=M
 M=D
 @SP
 M=M+1
-
-

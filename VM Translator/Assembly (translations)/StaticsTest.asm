@@ -4,7 +4,6 @@ D=A
 @SP
 M=D
 
-
 // Call SYS.INIT 0
 @SYS.INIT$ret.0
 D=A
@@ -55,14 +54,10 @@ M=D
 0;JMP
 (SYS.INIT$ret.0)
 
-
-
-
 // Function CLASS1.SET 0
 (CLASS1.SET)
 @0
 D=A
-
 
 // Push ARGUMENT 0
 @ARG
@@ -77,7 +72,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop STATIC 0
 @SP
 M=M-1
@@ -85,7 +79,6 @@ A=M
 D=M
 @Class1.vm.0
 M=D
-
 
 // Push ARGUMENT 1
 @ARG
@@ -100,7 +93,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop STATIC 1
 @SP
 M=M-1
@@ -108,7 +100,6 @@ A=M
 D=M
 @Class1.vm.1
 M=D
-
 
 // Push CONSTANT 0
 @0
@@ -118,7 +109,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -172,14 +162,12 @@ M=D
 @retAddr
 A=M
 0;JMP
-
 
 // Function CLASS1.GET 0
 (CLASS1.GET)
 @0
 D=A
 
-
 // Push STATIC 0
 @Class1.vm.0
 D=M
@@ -189,7 +177,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push STATIC 1
 @Class1.vm.1
 D=M
@@ -198,7 +185,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -218,7 +204,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -273,12 +258,10 @@ M=D
 A=M
 0;JMP
 
-
 // Function CLASS2.SET 0
 (CLASS2.SET)
 @0
 D=A
-
 
 // Push ARGUMENT 0
 @ARG
@@ -293,7 +276,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop STATIC 0
 @SP
 M=M-1
@@ -301,7 +283,6 @@ A=M
 D=M
 @Class2.vm.0
 M=D
-
 
 // Push ARGUMENT 1
 @ARG
@@ -316,7 +297,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop STATIC 1
 @SP
 M=M-1
@@ -324,7 +304,6 @@ A=M
 D=M
 @Class2.vm.1
 M=D
-
 
 // Push CONSTANT 0
 @0
@@ -334,7 +313,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -389,12 +367,10 @@ M=D
 A=M
 0;JMP
 
-
 // Function CLASS2.GET 0
 (CLASS2.GET)
 @0
 D=A
-
 
 // Push STATIC 0
 @Class2.vm.0
@@ -405,7 +381,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push STATIC 1
 @Class2.vm.1
 D=M
@@ -414,7 +389,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -435,7 +409,6 @@ M=D
 @SP
 M=M+1
 
-
 // Return
 @LCL
 D=M
@@ -489,12 +462,10 @@ M=D
 A=M
 0;JMP
 
-
 // Function SYS.INIT 0
 (SYS.INIT)
 @0
 D=A
-
 
 // Push CONSTANT 6
 @6
@@ -505,7 +476,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 8
 @8
 D=A
@@ -514,7 +484,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call CLASS1.SET 2
 @CLASS1.SET$ret.1
@@ -566,7 +535,6 @@ M=D
 0;JMP
 (CLASS1.SET$ret.1)
 
-
 // Pop TEMP 0
 @SP
 M=M-1
@@ -574,7 +542,6 @@ A=M
 D=M
 @5
 M=D
-
 
 // Push CONSTANT 23
 @23
@@ -585,7 +552,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 15
 @15
 D=A
@@ -594,7 +560,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call CLASS2.SET 2
 @CLASS2.SET$ret.2
@@ -646,7 +611,6 @@ M=D
 0;JMP
 (CLASS2.SET$ret.2)
 
-
 // Pop TEMP 0
 @SP
 M=M-1
@@ -654,7 +618,6 @@ A=M
 D=M
 @5
 M=D
-
 
 // Call CLASS1.GET 0
 @CLASS1.GET$ret.3
@@ -706,7 +669,6 @@ M=D
 0;JMP
 (CLASS1.GET$ret.3)
 
-
 // Call CLASS2.GET 0
 @CLASS2.GET$ret.4
 D=A
@@ -757,13 +719,10 @@ M=D
 0;JMP
 (CLASS2.GET$ret.4)
 
-
 // Label END
 (SYS.INIT$END)
-
 
 // Goto END
 @SYS.INIT$END
 0;JMP
-
 

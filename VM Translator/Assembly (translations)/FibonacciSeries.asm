@@ -11,7 +11,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 1
 @SP
 M=M-1
@@ -19,7 +18,6 @@ A=M
 D=M
 @4
 M=D
-
 
 // Push CONSTANT 0
 @0
@@ -29,7 +27,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop THAT 0
 @SP
@@ -50,7 +47,6 @@ D=M
 A=M
 M=D
 
-
 // Push CONSTANT 1
 @1
 D=A
@@ -59,7 +55,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop THAT 1
 @SP
@@ -80,7 +75,6 @@ D=M
 A=M
 M=D
 
-
 // Push ARGUMENT 0
 @ARG
 D=M
@@ -94,7 +88,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 2
 @2
 D=A
@@ -103,7 +96,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -124,7 +116,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop ARGUMENT 0
 @SP
 M=M-1
@@ -144,10 +135,8 @@ D=M
 A=M
 M=D
 
-
 // Label LOOP
 (NULL$LOOP)
-
 
 // Push ARGUMENT 0
 @ARG
@@ -162,7 +151,6 @@ M=D
 @SP
 M=M+1
 
-
 // If-goto COMPUTE_ELEMENT
 @SP
 M=M-1
@@ -171,15 +159,12 @@ D=M
 @NULL$COMPUTE_ELEMENT
 D;JNE
 
-
 // Goto END
 @NULL$END
 0;JMP
 
-
 // Label COMPUTE_ELEMENT
 (NULL$COMPUTE_ELEMENT)
-
 
 // Push THAT 0
 @THAT
@@ -194,7 +179,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push THAT 1
 @THAT
 D=M
@@ -207,7 +191,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // ADD
 @SP
@@ -227,7 +210,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Pop THAT 2
 @SP
@@ -248,7 +230,6 @@ D=M
 A=M
 M=D
 
-
 // Push POINTER 1
 @4
 D=M
@@ -258,7 +239,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 1
 @1
 D=A
@@ -267,7 +247,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // ADD
 @SP
@@ -288,7 +267,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop POINTER 1
 @SP
 M=M-1
@@ -296,7 +274,6 @@ A=M
 D=M
 @4
 M=D
-
 
 // Push ARGUMENT 0
 @ARG
@@ -311,7 +288,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 1
 @1
 D=A
@@ -320,7 +296,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -341,7 +316,6 @@ M=D
 @SP
 M=M+1
 
-
 // Pop ARGUMENT 0
 @SP
 M=M-1
@@ -361,13 +335,9 @@ D=M
 A=M
 M=D
 
-
 // Goto LOOP
 @NULL$LOOP
 0;JMP
 
-
 // Label END
 (NULL$END)
-
-

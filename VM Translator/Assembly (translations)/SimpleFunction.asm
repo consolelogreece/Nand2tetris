@@ -13,7 +13,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push LOCAL 0
 @LCL
 D=M
@@ -26,7 +25,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Push LOCAL 1
 @LCL
@@ -41,7 +39,6 @@ M=D
 @SP
 M=M+1
 
-
 // ADD
 @SP
 M=M-1
@@ -61,7 +58,6 @@ M=D
 @SP
 M=M+1
 
-
 // NOT
 @SP
 M=M-1
@@ -73,7 +69,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Push ARGUMENT 0
 @ARG
@@ -88,7 +83,6 @@ M=D
 @SP
 M=M+1
 
-
 // ADD
 @SP
 M=M-1
@@ -108,7 +102,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push ARGUMENT 1
 @ARG
 D=M
@@ -121,7 +114,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -141,7 +133,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -195,5 +186,3 @@ M=D
 @retAddr
 A=M
 0;JMP
-
-

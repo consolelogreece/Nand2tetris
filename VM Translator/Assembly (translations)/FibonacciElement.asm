@@ -4,7 +4,6 @@ D=A
 @SP
 M=D
 
-
 // Call SYS.INIT 0
 @SYS.INIT$ret.0
 D=A
@@ -55,14 +54,10 @@ M=D
 0;JMP
 (SYS.INIT$ret.0)
 
-
-
-
 // Function MAIN.FIBONACCI 0
 (MAIN.FIBONACCI)
 @0
 D=A
-
 
 // Push ARGUMENT 0
 @ARG
@@ -77,7 +72,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 2
 @2
 D=A
@@ -86,7 +80,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // LT
 @SP
@@ -115,7 +108,6 @@ M=D
 @SP
 M=M+1
 
-
 // If-goto N_LT_2
 @SP
 M=M-1
@@ -124,15 +116,12 @@ D=M
 @MAIN.FIBONACCI$N_LT_2
 D;JNE
 
-
 // Goto N_GE_2
 @MAIN.FIBONACCI$N_GE_2
 0;JMP
 
-
 // Label N_LT_2
 (MAIN.FIBONACCI$N_LT_2)
-
 
 // Push ARGUMENT 0
 @ARG
@@ -146,7 +135,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -201,10 +189,8 @@ M=D
 A=M
 0;JMP
 
-
 // Label N_GE_2
 (MAIN.FIBONACCI$N_GE_2)
-
 
 // Push ARGUMENT 0
 @ARG
@@ -219,7 +205,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 2
 @2
 D=A
@@ -228,7 +213,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -248,7 +232,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call MAIN.FIBONACCI 1
 @MAIN.FIBONACCI$ret.3
@@ -300,7 +283,6 @@ M=D
 0;JMP
 (MAIN.FIBONACCI$ret.3)
 
-
 // Push ARGUMENT 0
 @ARG
 D=M
@@ -314,7 +296,6 @@ M=D
 @SP
 M=M+1
 
-
 // Push CONSTANT 1
 @1
 D=A
@@ -323,7 +304,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // SUB
 @SP
@@ -343,7 +323,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call MAIN.FIBONACCI 1
 @MAIN.FIBONACCI$ret.4
@@ -395,7 +374,6 @@ M=D
 0;JMP
 (MAIN.FIBONACCI$ret.4)
 
-
 // ADD
 @SP
 M=M-1
@@ -414,7 +392,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Return
 @LCL
@@ -469,12 +446,10 @@ M=D
 A=M
 0;JMP
 
-
 // Function SYS.INIT 0
 (SYS.INIT)
 @0
 D=A
-
 
 // Push CONSTANT 4
 @4
@@ -484,7 +459,6 @@ A=M
 M=D
 @SP
 M=M+1
-
 
 // Call MAIN.FIBONACCI 1
 @MAIN.FIBONACCI$ret.5
@@ -536,13 +510,9 @@ M=D
 0;JMP
 (MAIN.FIBONACCI$ret.5)
 
-
 // Label END
 (SYS.INIT$END)
-
 
 // Goto END
 @SYS.INIT$END
 0;JMP
-
-
