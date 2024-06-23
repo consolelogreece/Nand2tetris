@@ -27,5 +27,6 @@ class Parser
 		string ToUpper(string str);
 		string getNextValidLine();
 		bool eof;
+		std::string trim(const std::string& str, const std::string& whitespace);
 };
 

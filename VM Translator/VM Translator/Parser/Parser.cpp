@@ -28,6 +28,12 @@ Parser::Parser(std::string fileName)
 	commandMap["AND"] = CommandTypes::ARITHMETIC;
 	commandMap["OR"] = CommandTypes::ARITHMETIC;
 	commandMap["NOT"] = CommandTypes::ARITHMETIC;
+	commandMap["LABEL"] = CommandTypes::LABEL;
+	commandMap["IF-GOTO"] = CommandTypes::IF;
+	commandMap["GOTO"] = CommandTypes::GOTO;
+	commandMap["CALL"] = CommandTypes::CALL;
+	commandMap["FUNCTION"] = CommandTypes::FUNCTION;
+	commandMap["RETURN"] = CommandTypes::RETURN;
 
 	eof = false;
 }
@@ -41,6 +47,9 @@ bool Parser::advance()
 {
 	string line = getNextValidLine();
 
+	line = trim(line, "\t");
+	line = trim(line, " ");
+
 	if (eof) return false;
 
 	line = ToUpper(line);
@@ -50,7 +59,7 @@ bool Parser::advance()
 
 	commandTypeValue = commandMap[symbols[0]];
 
-	if (symbols.size() >= 2) arg1Value = symbols[1];
+	if (symbols.size() >= 2 && commandTypeValue != CommandTypes::ARITHMETIC) arg1Value = symbols[1];
 	else arg1Value = symbols[0];
 
 	if (symbols.size() >= 3) arg2Value = atoi(symbols[2].c_str());		
@@ -106,4 +115,15 @@ string Parser::arg1()
 int Parser::arg2()
 {
 	return arg2Value;
+}
+
+// copied from internet
+std::string Parser::trim(const std::string& str, const std::string& whitespace = " \t") {
+	const auto strBegin = str.find_first_not_of(whitespace);
+	if (strBegin == std::string::npos)
+		return "";
+
+	const auto strEnd = str.find_last_not_of(whitespace);
+	const auto strRange = strEnd - strBegin + 1;
+	return str.substr(strBegin, strRange);
 }
