@@ -1,0 +1,226 @@
+class Board
+{
+    static int boundTop;
+    static int boundLeft;
+    static int boundRight;
+    static int boundBottom;
+    static int tileSize;
+    static int boardWidth;
+    static int boardHeight;
+    static int nRows;
+    static int nCols;
+
+    function void InitializeBoard(int t, int b, int l, int r)
+    {
+        let boundTop = t;
+        let boundLeft = l;
+        let boundRight = r;
+        let boundBottom = b;
+        let tileSize = 16;
+        let boardWidth = 512;
+        let boardHeight = 256;
+        let nRows = boardHeight / tileSize;
+        let nCols = boardWidth / tileSize;
+
+        return;
+    }
+
+    function void PerformWrapping(Coordinate coords)
+    {
+        var Array overShots;
+        var int x;
+        var int y;
+
+        let x = coords.GetX();
+        let y = coords.GetY();
+
+        let overShots = Board.DetermineOvershots(coords);
+
+        if (overShots[0] > 0) { let x = boundLeft + (overShots[0] - 1);}
+        if (overShots[0] < 0) { let x = boundRight + (overShots[0] + 1);}
+        if (overShots[1] > 0) { let y = boundTop + (overShots[1] - 1);}
+        if (overShots[1] < 0) { let y = boundBottom + (overShots[1] + 1);}
+
+        do overShots.dispose();
+        
+        do coords.SetX(x);
+        do coords.SetY(y);
+
+        return;
+    }
+
+    function Array DetermineOvershots(Coordinate coords)
+    {
+        var int x;
+        var int y;
+        var Array overShots;
+
+        let overShots = Memory.alloc(2);
+        // initialize to 0 as could otherwise contain garbage data.
+        let overShots[0] = 0;
+        let overShots[1] = 0;
+
+        let x = coords.GetX();
+        let y = coords.GetY();
+           
+        if (x < boundLeft) {
+            let overShots[0] = x - boundLeft;
+        }
+
+        if (y < boundTop) {
+            let overShots[1] = y - boundTop;
+        }
+
+        if (x > boundRight) {
+            let overShots[0] = x - boundRight;
+        }
+        
+        if (y > boundBottom) {
+            let overShots[1] = y - boundBottom;
+        }
+    
+        return overShots;
+    }
+
+    function int GetStartWordFromCoords(Coordinate coords)
+    {
+        return (coords.GetY() * boardWidth) + coords.GetX();  
+    }
+
+    function void FillTile(Coordinate coords, boolean color) 
+    {
+        do Screen.setColor(color);
+
+        do Screen.drawRectangle((coords.GetX() * tileSize), (coords.GetY() * tileSize), (coords.GetX() * tileSize) + tileSize, (coords.GetY() * tileSize) + tileSize);
+    
+        return;
+    }
+
+    function void DrawCircleOnTile(Coordinate coord, int r, boolean color)
+    {
+        do Screen.setColor(color);
+
+        do Screen.drawCircle((coord.GetX() * tileSize) + (tileSize / 2), (coord.GetY() * tileSize) + (tileSize / 2), r);
+
+        return;
+    }
+
+    function Coordinate GetNewRandomLocation()
+    {
+        var int x;
+        var int y;
+        var Coordinate location;
+
+        let x = Random.randRange(boundLeft, boundRight);
+        let y = Random.randRange(boundTop, boundBottom);
+
+        // range function sometimes returns outside provided range...
+        if (y > boundBottom) { let y = boundBottom; }
+        if (x > boundRight) { let x = boundRight; }
+
+        if (y < boundTop) { let y = boundTop; }
+        if (x < boundLeft) { let x = boundLeft; }
+
+        return Coordinate.new(x,y);
+    }
+
+    function void NextTile(Coordinate coord)
+    {
+        var int x;
+        var int y;
+
+        let x = coord.GetX();
+        let y = coord.GetY();
+
+        let x = x + 1;
+
+        if (x > boundRight)
+        {
+            let x = boundLeft;
+            let y = y + 1;
+        }
+        if (y > boundBottom)
+        {
+            let y = boundTop;
+        }
+
+        do coord.SetX(x);
+        do coord.SetY(y);
+
+        return;
+    }
+
+    function void DrawBrickBackground()
+    {
+        var int row;
+        var int col;
+        // brick background
+        while (row < nRows)
+        {
+            let col = 0;
+            while (col <  nCols)
+            {
+                do Board.DrawBrickTile((row * boardWidth) + (col));
+                let col = col + 1;
+            }
+        
+            let row = row + 1;
+        }
+
+        return;
+    }
+
+    function void DrawPlayingArea()
+    {
+        do Screen.setColor(true);
+        do Screen.drawRectangle((boundLeft * tileSize) - 2, (boundTop * tileSize) - 2, ((boundRight + 1) * tileSize) + 2, ((boundBottom + 1) * tileSize) + 2);
+        do Screen.setColor(false);
+        // + 1 so as to cover the outer tiles as tiles are drawn from the top left, meaning need +1 to bottom and right sides.
+        do Screen.drawRectangle(boundLeft * tileSize, boundTop * tileSize, ((boundRight + 1) * tileSize), (boundBottom + 1) * tileSize);
+
+        return;
+    }
+
+    function void DrawScoreBoard()
+    {
+        do Screen.setColor(true);
+        do Screen.drawRectangle((23 * tileSize) - 2, (1* (tileSize / 2)) - 2, (29* tileSize) + 2, (3* (tileSize / 2)) + 2);
+        do Screen.setColor(false);
+        do Screen.drawRectangle((23 * tileSize), (1* (tileSize / 2)), (29* tileSize), (3* (tileSize / 2)));
+
+        return;
+    }
+
+    function void DrawScore(int score)
+    {
+        do Output.moveCursor(1, 47);
+        do Output.printString("Score: ");
+        do Output.printInt(score);
+
+        return;
+    }
+
+    function void DrawBrickTile(int location)
+    {
+        var int memAddress;
+        let memAddress = 16384+location;
+        do Memory.poke(memAddress, -1);
+        do Memory.poke(memAddress +32, 384);
+        do Memory.poke(memAddress +64, 384);
+        do Memory.poke(memAddress +96, 384);
+        do Memory.poke(memAddress +128, 384);
+        do Memory.poke(memAddress +160, 384);
+        do Memory.poke(memAddress +192, 384);
+        do Memory.poke(memAddress +224, -1);
+        do Memory.poke(memAddress +256, -1);
+        do Memory.poke(memAddress +288, -32767);
+        do Memory.poke(memAddress +320, -32767);
+        do Memory.poke(memAddress +352, -32767);
+        do Memory.poke(memAddress +384, -32767);
+        do Memory.poke(memAddress +416, -32767);
+        do Memory.poke(memAddress +448, -32767);
+        do Memory.poke(memAddress +480, -1);
+
+        return;
+    }
+}

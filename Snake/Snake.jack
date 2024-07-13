@@ -1,0 +1,250 @@
+class Snake
+{
+    field Array bodyCoordinates;
+    field Coordinate head;
+    field int direction;
+    field int maxLength;
+    field int bodySegmentCount;
+    field boolean hitSelf;
+
+    constructor Snake new(int maxlen, int startX, int startY)
+    {
+        var int i;
+
+        let maxLength = maxlen - 1; // -1 for head.
+        let bodyCoordinates = Memory.alloc(maxLength);
+
+        // initialize to null as could otherwise contain garbage data.
+        while (i < maxlen)
+        {
+            let bodyCoordinates[i] = null;
+            let i = i + 1;
+        }
+
+        let head = Coordinate.new(startX, startY);
+        let bodySegmentCount = 0;
+        let hitSelf = false;
+        return this;
+    }
+
+    method boolean HasHitSelf()
+    {
+        return hitSelf;
+    }
+
+    method void SetDirection(int dir)
+    {
+        // not allowed to turn 180 degrees back
+        if (~(Math.abs(direction - dir) = 2))
+        {
+            let direction = dir;
+        }
+        return;
+    }
+
+    method void Move()
+    {
+        // rather than redrawing the whole screen, erase the head and tail tiles now, and then in draw only redraw head and first segment.
+        // not ideal but necessary optimisation as otherwise game was too laggy.
+        
+        if (bodySegmentCount = 0) {do Board.FillTile(head, false);}
+        
+        if (bodySegmentCount > 0)
+        {            
+            do Board.FillTile(bodyCoordinates[bodySegmentCount - 1], false);
+        }
+
+        do ShiftBody();
+        do MoveHead();
+    
+        let hitSelf = Overlapping(head);
+        return;
+    }
+
+    method boolean Overlapping(Coordinate coord)
+    {
+        var int i;
+
+        while (i < bodySegmentCount)
+        {
+            if (~(coord = bodyCoordinates[i]))
+            {
+                // only do the mor expensive coordinate check if they arent the same pointers.
+                if (coord.Equals(bodyCoordinates[i]))
+                {
+                    return true;
+                }
+            }
+
+            let i = i + 1;
+        }
+
+        return false;
+    }
+
+    method void ShiftBody()
+    {
+        var int i;
+        var Coordinate tailHolder;
+        let tailHolder = bodyCoordinates[bodySegmentCount - 1];
+        let i = bodySegmentCount - 1;
+    
+        if (bodySegmentCount > 0)
+        {
+            // shift all pointers along, then move end segment back to start and only update that segments coords.
+            while (i > 0)
+            {
+                let bodyCoordinates[i] = bodyCoordinates[i-1];
+                let i = i - 1;
+            }
+
+            do tailHolder.SetX(head.GetX());
+            do tailHolder.SetY(head.GetY());
+            let bodyCoordinates[0] = tailHolder;
+        }
+        
+        return;
+    }
+
+    method void Grow()
+    {
+        if (bodySegmentCount < maxLength)
+        {
+            let bodyCoordinates[bodySegmentCount] = Coordinate.new(head.GetX(), head.GetY());
+        
+            let bodySegmentCount = bodySegmentCount + 1;
+        }
+
+        return;
+    }
+
+    method void MoveHead()
+    {
+        var int x;
+        var int y;
+        let x = head.GetX();
+        let y = head.GetY();
+
+        // dir 1 = left, dir 2 = up, dir 3 = right, dir 4 = down
+        if (direction = 1 )
+        {
+            let x = x - 1;
+        }
+        if(direction = 2)
+        {
+            let y = y - 1;
+        }
+        if (direction = 3)
+        {
+            let x = x + 1;
+        }
+        if (direction = 4)
+        {
+            let y = y + 1;
+        }
+
+        do head.SetX(x);
+        do head.SetY(y);
+
+        do Board.PerformWrapping(head);  
+ 
+        return;
+    }
+
+    method boolean IsOccupying(Coordinate pos)
+    {
+        return IsHeadOccupying(pos) | IsBodyOccupying(pos);
+    }
+
+    method boolean IsHeadOccupying(Coordinate pos)
+    {
+        return pos.Equals(head);
+    }
+
+    method boolean IsBodyOccupying(Coordinate pos)
+    {
+        var int i;
+
+        while (i < bodySegmentCount)
+        {
+            if (pos.Equals(bodyCoordinates[i]))
+            {
+                return true;
+            }
+
+            let i = i + 1;
+        }
+
+        return false;
+    }
+
+    method void Draw()
+    {
+        var int i;
+        var Coordinate currentBodyPart;
+
+        // only draw head and first segment. rest of tail isnt erased (apart from very last one). not ideal in terms of coding convetions but a necessary optimisaiton.
+        if (bodySegmentCount > 0)
+        {
+            do DrawBody(bodyCoordinates[0]);
+        }
+
+        do DrawHead(head);      
+
+        return;
+    }
+
+   method void DrawHead(Coordinate coords) 
+   {
+        var int drawloc;
+        var int memAddress; 
+        
+        // * 16 because food is pixels tall.
+        let drawloc = Board.GetStartWordFromCoords(coords);           
+
+        let memAddress = 16384+drawloc;
+        // column 0 
+        do Memory.poke(memAddress, 0);
+        do Memory.poke(memAddress +32, 4080);
+        do Memory.poke(memAddress +64, 16380);
+        do Memory.poke(memAddress +96, 32766);
+        do Memory.poke(memAddress +128, 32766);
+        do Memory.poke(memAddress +160, 16770);
+        do Memory.poke(memAddress +192, 19890);
+        do Memory.poke(memAddress +224, 19890);
+        do Memory.poke(memAddress +256, 16770);
+        do Memory.poke(memAddress +288, 17346);
+        do Memory.poke(memAddress +320, 32766);
+        do Memory.poke(memAddress +352, 32670);
+        do Memory.poke(memAddress +384, 15388);
+        do Memory.poke(memAddress +416, 16380);
+        do Memory.poke(memAddress +448, 8176);
+        do Memory.poke(memAddress +480, 0);
+        return;
+    }
+
+    method void DrawBody(Coordinate coord)
+    {
+        do Board.DrawCircleOnTile(coord, 7, true);
+        return;
+    }
+
+    method void dispose()
+    {
+        var int i;
+        var Coordinate currCoord;
+        do head.dispose();
+
+        while (i < bodySegmentCount)
+        {
+            let currCoord = bodyCoordinates[i];
+            do currCoord.dispose();
+            let i = i + 1;
+        }
+
+        do bodyCoordinates.dispose();
+        do Memory.deAlloc(this);
+
+        return;
+    }
+}

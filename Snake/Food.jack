@@ -1,0 +1,54 @@
+class Food
+{
+    field Coordinate location;
+
+    constructor Food new(Coordinate loc)
+    {
+        let location = loc;
+        return this;
+    }
+
+    method int GetLocation()
+    {
+        return location;
+    }
+
+    method void Draw() {
+        var int drawloc;
+        var int memAddress; 
+        
+        // * 16 because food is pixels tall.
+        let drawloc = Board.GetStartWordFromCoords(location);           
+
+        let memAddress = 16384+drawloc;
+        // column 0
+        do Memory.poke(memAddress, 0);
+        do Memory.poke(memAddress +32, 0);
+        do Memory.poke(memAddress +64, 3712);
+        do Memory.poke(memAddress +96, 1920);
+        do Memory.poke(memAddress +128, 896);
+        do Memory.poke(memAddress +160, 128);
+        do Memory.poke(memAddress +192, 4080);
+        do Memory.poke(memAddress +224, 8184);
+        do Memory.poke(memAddress +256, 16380);
+        do Memory.poke(memAddress +288, 16380);
+        do Memory.poke(memAddress +320, 16380);
+        do Memory.poke(memAddress +352, 16380);
+        do Memory.poke(memAddress +384, 8184);
+        do Memory.poke(memAddress +416, 3696);
+        do Memory.poke(memAddress +448, 0);
+        do Memory.poke(memAddress +480, 0);
+        return;
+    }
+
+    method void dispose()
+    {
+        if (~(location = null))
+        {
+            do location.dispose();
+        }
+        do Memory.deAlloc(this);
+
+        return;
+    }
+}

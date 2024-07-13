@@ -1,0 +1,50 @@
+class Coordinate
+{
+    field int X;
+    field int Y;
+
+    constructor Coordinate new(int xpos, int ypos)
+    {
+        let X = xpos;
+        let Y = ypos;
+        return this;
+    }
+
+    method int GetX()
+    {
+        return X;
+    }
+
+    method int GetY()
+    {
+        return Y;
+    }
+
+    method void SetX(int x)
+    {
+        let X = x;
+        return;
+    }
+
+    method void SetY(int y)
+    {
+        let Y = y;
+        return;
+    }
+
+    method boolean Equals(Coordinate coord)
+    {
+        if ((coord.GetX() = X) & (coord.GetY() = Y))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    method void dispose()
+    {       
+        do Memory.deAlloc(this);
+        return;
+    }
+}

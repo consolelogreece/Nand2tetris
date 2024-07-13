@@ -1,0 +1,33 @@
+class Main
+{
+    function void main()
+    {
+        var SnakeGame game;
+        var int boundLeft;
+        var int boundRight;
+        var int boundTop;
+        var int boundBottom;
+
+        let boundTop = 2;
+        let boundBottom = 13;
+        let boundLeft = 3;
+        let boundRight = 28;
+
+        do Board.InitializeBoard(boundTop, boundBottom, boundLeft, boundRight);
+
+        let game = SnakeGame.New(((boundBottom - boundTop ) * (boundRight - boundLeft)), boundLeft, (boundBottom - boundTop) / 2);
+
+        while (true)
+        {
+            do game.Start();
+
+            do Screen.clearScreen();
+            
+            do game.dispose();
+
+            let game = SnakeGame.New(((boundBottom - boundTop ) * (boundRight - boundLeft)), boundLeft, (boundBottom - boundTop) / 2);
+        }
+
+        return;
+    }
+}

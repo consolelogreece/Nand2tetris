@@ -1,0 +1,179 @@
+class SnakeGame
+{
+    field Snake snake;
+    field Food food;
+    field int score;
+    field boolean gameOver;
+    field boolean hasStarted;
+
+    constructor SnakeGame New(int maxSnakeLen, int snakeStartX, int snakeStartY)
+    {
+        let snake = Snake.new(maxSnakeLen, snakeStartX, snakeStartY);
+        do snake.SetDirection(3);
+        let gameOver = false;
+        let hasStarted = false;
+        let score = 0;
+        let food = null;
+        
+        return this;
+    }
+
+    method void Start()
+    {
+        do Screen.clearScreen();
+        do Board.DrawBrickBackground();
+        do Board.DrawPlayingArea(); // done to overwrite start screen text
+        do DisplayStartScreen();
+        do Board.DrawPlayingArea();
+        do Board.DrawScoreBoard();
+        do Board.DrawScore(score);
+        do Play();
+        do GameOver();
+                
+        return;
+    }
+
+    method void GameOver()
+    {
+        var Char keyPressed;
+        do Output.moveCursor(8,17);
+        do Output.printString("Game over! Press Space to exit");
+
+        let keyPressed = Keyboard.keyPressed();
+
+        while (~(keyPressed = 32))
+        {
+            let keyPressed = Keyboard.keyPressed();
+        }
+
+        return;
+    }
+
+    method void HandleControls()
+    {
+        var char keyPressed;
+
+        let keyPressed = Keyboard.keyPressed();
+
+        if (keyPressed = 130)
+        {
+            do snake.SetDirection(1);
+        }
+        if (keyPressed = 131)
+        {
+            do snake.SetDirection(2);
+        }
+        if (keyPressed = 132)
+        {
+            do snake.SetDirection(3);
+        }
+        if (keyPressed = 133)
+        {
+            do snake.SetDirection(4);
+        }
+
+        return;
+    }
+
+    method void Play()
+    {
+        do RespawnFood();
+
+        while (~gameOver)
+        {  
+            do HandleControls();
+            do snake.Move();
+            do HandleCollisions();
+            // No need to erase food as if eaten the snake will be drawn on top anyway.
+            do food.Draw();
+            do snake.Draw();
+
+            do Sys.wait(75);
+        }
+
+        return;
+    }
+
+    method void HandleCollisions()
+    {
+        if (snake.IsHeadOccupying(food.GetLocation()))
+        {
+            let score = score + 1;
+            do Board.DrawScore(score);
+            do snake.Grow();
+            do RespawnFood();
+        }
+
+        let gameOver = snake.HasHitSelf();
+
+        return;
+    }
+
+    method void RespawnFood()
+    {
+        var Coordinate currentCoordinate;
+        var int x;
+        var int y;
+        var int startX;
+        var int startY;
+        var boolean started;
+
+        let currentCoordinate = Board.GetNewRandomLocation();
+        let startX = currentCoordinate.GetX();
+        let startY = currentCoordinate.GetY();
+        
+
+        if (~(food = null))
+        {
+            do food.dispose();
+        }
+
+        // loop until found new position or iterated over every tile, starting from random location.
+        while ((snake.IsOccupying(currentCoordinate) & (~(currentCoordinate.GetX() = startX & currentCoordinate.GetY() = startY) | ~started)))
+        {
+            let started = true;
+
+            do Board.NextTile(currentCoordinate);
+        }
+        
+        let food = Food.new(currentCoordinate);
+        return;
+    }
+
+    method void DisplayStartScreen()
+    {
+        // mainly done so can use the elapsed time as the start seed.
+        var int seed;
+        var char keyPressed;
+
+        do Output.moveCursor(7,20);
+        do Output.printString("Snake by consolelogreece");
+
+        do Output.moveCursor(16,22);
+        do Output.printString("Press Space to Start");
+
+        while (~hasStarted)
+        {
+            let seed = seed + 1;
+        
+            let keyPressed = Keyboard.keyPressed();
+
+            if (keyPressed = 32)
+            {
+                let hasStarted = true;
+            }
+        }
+
+        do Random.setSeed(seed);
+        return;
+    }
+
+    method void dispose()
+    {
+        do snake.dispose();
+        do food.dispose();
+        do Memory.deAlloc(this);
+    
+        return;
+    }   
+}
