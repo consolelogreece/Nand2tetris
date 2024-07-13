@@ -1,0 +1,1 @@
+This repository contains my solutions for the various projects in the Nand2tetris course (parts 1 and 2). I used different languages for different projects purely as a learning exercise.
